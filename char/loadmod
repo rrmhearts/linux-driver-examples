@@ -1,0 +1,10 @@
+#!/bin/bash
+
+module="Sample-driver"
+sudo make load
+
+major=$(awk -v mod="$module" '$2 == mod {print $1}' /proc/devices)
+
+sudo mknod /dev/sample-driver c $major 0
+
+echo "/dev/sample-driver created"

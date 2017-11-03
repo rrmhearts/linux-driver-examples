@@ -1,0 +1,6 @@
+#!/bin/bash
+
+module="Sample-driver"
+sudo make unload
+
+sudo rm /dev/sample-driver
