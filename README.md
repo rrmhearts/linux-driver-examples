@@ -1,4 +1,4 @@
-# Driver Overview
+# Linux Drivers Overview
 
 This is meant to provide documentation on linux drivers, specifically as an all in one knowledge base. Documentation is sparse and spread out across the internet at present.
 
@@ -6,7 +6,7 @@ Examples contained
 1. char  
 2. misc
 3. platform
-3a. i2c
+4. i2c
 
 What is a kobject? see kobject/
 
@@ -57,5 +57,5 @@ Non-platform devices such as PCI are inherently *discoverable*. This means that 
 Notice these things about non-platform drivers
 
 1. register and interrupt addresses are dynamically allocated by the PCI system, no device tree is used
-2. the correct driver is selected by the PCI vendor:device ID (QEMU_VENDOR_ID, EDU_DEVICE_ID on example). This is baked into every device, and vendors must ensure uniqueness.
+2. the correct driver is selected by the PCI vendor:device ID. This is baked into every device, and vendors must ensure uniqueness.
 3. we can insert and remove the PCI device with device_add edu and device_del edu as we can in real life. Probing is not automatic, but can be done after boot with echo 1 > /sys/bus/pci/rescan.
