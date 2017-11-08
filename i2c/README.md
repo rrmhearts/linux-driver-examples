@@ -3,13 +3,11 @@ The i2c subsystem allows Linux to be master and all connected devices to be slav
 
 When we talk about I2C, we use the following terms:
 
-  **Bus**    -> *Algorithm*
+  **Bus**    -> *Algorithm*, 
+                *Adapter*
 
-            *Adapter*
-
-  **Device** -> *Driver*
-
-            *Client*
+  **Device** -> *Driver*, 
+                *Client*
 ## How does a I2C device differ from a platform device?
 An i2c device is an example of a platform device, however the complexities of i2c protocol are abstracted in a piece of hardware called the *i2c controller* which provides a way to connect and communicate to i2c devices. 
 The driver used for configuring and using the i2c controller is a *platform driver*. The controller is an example of a platform device..
@@ -72,6 +70,7 @@ static struct i2c_driver adc_driver = {
 };
 ```
 
+![I2C Subsystem](https://raw.githubusercontent.com/rrmhearts/linux-driver-examples/i2c/etc/linux_i2c_subsystem.png)
 
 ## I2C Device Registration
 
