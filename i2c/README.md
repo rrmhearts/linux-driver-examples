@@ -38,7 +38,7 @@ If there is a system with 3 I2C buses, two controllowed by a *controller chip* a
 Each *device* connected to the bus is represented by the `struct i2c_client` (include/linux/i2c.h). This **maybe** defined beforehand in board-related code (arch/arm/mach.../board-omap...c). 
 The device has an *address* that is used by driver to determine where the device is on the bus. This address is hardcoded by the device? It's something like 0x14. The device also has a *name* and an *interrupt number* used to trigger and interrupt. 
 
-You must tell the *client* about the *adapter* which represents its bus line. When you want to read or write to device, it must know which bus line to use for communication. The *client* represents the device to linux. Since the device is hardware, this is usually defined under [Board Information](### I2C Board Information)
+You must tell the *client* about the *adapter* which represents its bus line. When you want to read or write to device, it must know which bus line to use for communication. The *client* represents the device to linux. Since the device is hardware, this is usually defined under [Board Information](###I2C-Board-Information)
 
 ### I2C Board Information
 Again, this may be where the `i2c_client` is defined in `struct i2c_board_info` (include/linux/i2c.h). 
