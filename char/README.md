@@ -1,5 +1,18 @@
-# Sample Drivers
+# Character Device Drivers
 
+## Overview
+Character devices are those who send and receive single characters at a time.
+Some examples include serial ports, parallel ports, sounds cards.
+
+I2C device files are character device files with major device number 89
+and a minor device number corresponding to the number assigned (by the operating system).
+In order to converse with I2C character devices, you go through `#include <linux/i2c-dev.h>`
+You can use the i2c-tools `i2cdetect -l` to determine the adapter number.
+You also will need the I2C address in your program for communicating (e.g. `ioctl(file, I2C_SLAVE, addr)`).
+SMBus commands or plain I2C is then used to communicate with device. 
+You can find more information and example under [I2C devices](https://github.com/rrmhearts/linux-driver-examples/tree/master/i2c).
+
+## Code changes
 The following may eventually be integrated into the character driver example code. A newer initialization for character drivers is as follows:
 
 ```
