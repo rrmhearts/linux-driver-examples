@@ -2,12 +2,16 @@
 The i2c subsystem allows Linux to be master and all connected devices to be slaves. They interact on the i2c bus.
 
 When we talk about I2C, we use the following terms:
-  Bus    -> Algorithm
-            Adapter
-  Device -> Driver
-            Client
+
+  **Bus**    -> *Algorithm*
+
+            *Adapter*
+
+  **Device** -> *Driver*
+
+            *Client*
 ## How does a I2C device differ from a platform device?
-An i2c device is an example of a platform device, however the complexities of i2c protocol are abstracted in *i2c controller* which provides a way to connect and communicate to i2c devices. 
+An i2c device is an example of a platform device, however the complexities of i2c protocol are abstracted in a piece of hardware called the *i2c controller* which provides a way to connect and communicate to i2c devices. 
 The driver used for configuring and using the i2c controller is a *platform driver*. The controller is an example of a platform device..
 
 If an i2c device does not fit into the i2c controller model... may have to create it as a platform driver and customize for device.?
@@ -15,30 +19,31 @@ If an i2c device does not fit into the i2c controller model... may have to creat
 ## I2C Algorithm
 
 An Algorithm driver contains general code that can be used for a whole class of I2C adapters. 
-Each specific adapter driver either depends on one algorithm driver, or includes its own implementation.
-
+It's function is to read and write the I2C messages to the hardware. 
+Each specific adapter driver either depends on one algorithm driver, or includes its own implementation. 
 There are three algorithms defined for the bus: pca, pcf and bitbanging. 
-These are used to communicate with devices when the driver requests to write or read data from the device.
+Bigbanging involves GPIO lines where the others write to an I2C controller chip. (Is the *I2c controller* required?)
+
+**I2C algorithms** are used to communicate with devices when the driver requests to write or read data from the device. 
+They are represented by the structure `i2c_algorithm` which allows you to define function pointers that can write I2C messages (`master_xfer`) or SMBus messages (`smbus_xfer`). 
+
 
 ## I2C Adapter
-There are multiple buses on the board and each bus is represented to Linux by a `struct i2c_adapter` (include/linux/i2c.h)
-
-Each bus in the system is represented by a *bus number* connecting a bus to a i2c adapter structure.
+There are multiple buses on the board and each bus is represented to Linux by a `struct i2c_adapter` (include/linux/i2c.h) 
+Each bus in the system is represented by a *bus number* connecting a bus to a i2c adapter structure. 
 The bus is subject to a protocol called the *i2c algorithm* for communicating with the device. 
+This bus may be used with I2C messages or SMBus (System Management Bus) messsages. Modern pcs rely on it to connect devices such as RAM modules, i2c devices, and others. The SMBus is considered a subset of the I2C protocol. 
 
-This bus may be associated with SMBus (System Management Bus) and modern pcs rely on it to connect devices such as RAM modules, i2c devices, and others. The SMBus is considered a subset of the I2C protocol.
+If there is a system with 3 I2C buses, two controllowed by a *controller chip* and one *big-banged*, there would be 3 instances of `i2c_adapter` and 2 instances of an `i2c_algorithm`.
 
 ## I2C Client
-Each *device* connected to the bus is represented by the `struct i2c_client` (include/linux/i2c.h). This **maybe** defined beforehand in board-related code (arch/arm/mach.../board-omap...c).
-
-The device has an *address* that is used by driver to determine where the device is on the bus. This address is hardcoded by the device? It's something like 0x14. The device also has a *name* and an *interrupt number* used to trigger and interrupt.
-
+Each *device* connected to the bus is represented by the `struct i2c_client` (include/linux/i2c.h). This **maybe** defined beforehand in board-related code (arch/arm/mach.../board-omap...c). 
+The device has an *address* that is used by driver to determine where the device is on the bus. This address is hardcoded by the device? It's something like 0x14. The device also has a *name* and an *interrupt number* used to trigger and interrupt. 
 You must tell the *client* about the *adapter* which represents its bus line. When you want to read or write to device, it must know which bus line to use for communication.
 
 ### I2C Board Information
-Again, this may be where the i2c_client is defined in `struct i2c_board_info` (include/linux/i2c.h). 
-
-The board information structure contains information related to the board as well as devices on the board? The *type* field indicates the type of (i2c) device and is copied to the i2c_client object. The *addr* field is similar to above in the client (copied to address field in *i2c_client*. There is also parallels *irq* .. The board information structS are written as an array of devices like the following:
+Again, this may be where the `i2c_client` is defined in `struct i2c_board_info` (include/linux/i2c.h). 
+The board information structure contains information related to the board as well as devices on the board? The *type* field indicates the type of (i2c) device and is copied to the `i2c_client` object. The *addr* field is similar to above in the client (copied to address field in *i2c_client*. There is also parallels *irq* .. The board information structS are written as an array of devices like the following:
 ```
 static struct i2c_board_info z23_devices[] = {
 	{
@@ -56,7 +61,6 @@ This board info is received into the kernel during bootup. The *i2c_client* is c
 
 ## I2C Driver
 For each device, there exists a driver that corresponds to it. The driver is represented by `struct i2c_driver` (include/linux/i2c.h). 
-
 The driver has a *name* which is used to link the client device with one driver. The driver also has a *probe* function which is called when the device and driver are both found on the system by a *Linux device driver subsystem*. For example,
 ```
 static struct i2c_driver adc_driver = {
@@ -116,7 +120,7 @@ i2c_smbus_write_word_data(struct i2c_client *client, u8 command, u16 data);
 ## Instantiating I2C devices
 There are several means of declaring/instantiating a I2C device
 
-1. Declare device by bus number in i2c_board_info found in arch/ board code
+1. Declare device by bus number in `i2c_board_info` found in arch/ board code
 ```
 static struct i2c_board_info h4_i2c_board_info[] __initdata = {
    {
