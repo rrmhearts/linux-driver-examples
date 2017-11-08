@@ -70,7 +70,8 @@ static struct i2c_driver adc_driver = {
 };
 ```
 
-![I2C Subsystem](https://raw.githubusercontent.com/rrmhearts/linux-driver-examples/i2c/etc/linux_i2c_subsystem.png)
+Below is an image of the I2C subsystem for reference. This image is most helpful for reference and understanding the system as a whole.
+![](https://github.com/rrmhearts/linux-driver-examples/blob/master/i2c/etc/linux_i2c_subsystem.jpg)
 
 ## I2C Device Registration
 
