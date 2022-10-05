@@ -3,10 +3,11 @@
 This is meant to provide documentation on linux drivers, specifically as an all in one knowledge base. Documentation is sparse and spread out across the internet at present. I2C devices are on a two line bus and are undiscoverable, platform devices. In order to find out if an i2cbus exists and/or any devices are found on it, you can you the *i2cdetect* tool found on various linux systems.
 
 Examples contained
-1. char  
-2. misc
-3. platform
-4. i2c
+1. [char](./char/)
+2. [misc](./misc/)
+3. [platform](./platform/)
+4. [i2c](./i2c/)
+5. [wsl](./wsl/README.md)
 
 What is a kobject? see kobject/
 
