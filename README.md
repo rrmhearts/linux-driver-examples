@@ -1,57 +1,138 @@
-# Linux Drivers Overview
+# Linux Device Drivers Overview
 
-This is meant to provide documentation on linux drivers, specifically as an all in one knowledge base. Documentation is sparse and spread out across the internet at present. I2C devices are on a two line bus and are undiscoverable, platform devices. In order to find out if an i2cbus exists and/or any devices are found on it, you can you the *i2cdetect* tool found on various linux systems.
+This document provides a consolidated introduction to **Linux device drivers**, serving as a centralized knowledge base. Since Linux driver documentation is often fragmented across various sources, this guide aims to provide a clear, cohesive overview — with a particular focus on **platform**, **I2C**, **misc**, and **character** drivers.
 
-Examples contained
-1. [char](./char/)
-2. [misc](./misc/)
-3. [platform](./platform/)
-4. [i2c](./i2c/)
-5. [wsl](./wsl/README.md)
+## Contents & Examples
 
-What is a kobject? see kobject/
+This repository contains example drivers and related documentation:
 
-## What is a misc driver?
-Used to interact with user space. Some drivers may be broken into parts, a i2c or platform driver to interact with a device and a misc driver to interact with userspace.. Misc drivers can be registered in platform's probe function. 
-Misc facilitates user space read and write calls.. 
-Misc drivers do not require major numbers and provide only 1 minor number. (drivers/char/misc && misc_register) 
-There is also (drivers/misc) which are a set of drivers that do not fit in other categories.. Two different topics.
+1. [Character Drivers](./char/)
+2. [Misc Drivers](./misc/)
+3. [Platform Drivers](./platform/)
+4. [I2C Drivers](./i2c/)
+5. [WSL Notes](./wsl/README.md)
+6. [What is a `kobject`?](./sysfs/kobject/)
 
-## What is a platform device?
-Platform devices are inherently *not discoverable* They cannot inform software of their presence. i2c devices fall into this category. The software must know at compile time of their existence (via `board_info` or device tree (dts)..) 
-They are bound to drivers by *name matching* which you can learn in the i2c/ directory. Should be registered asap so that they can used.
+## I2C Devices and `i2cdetect`
 
-USB and PCI would then **not** count as platform devices.
+I2C devices communicate over a **two-wire bus** (SDA + SCL) and are typically **not discoverable** in the same way USB or PCI devices are. In Linux, I2C devices are treated as **platform devices** — meaning the system must already know they exist (via device tree or static registration).
 
-There are 2 requirements to work with platform devices
-1. **registering the driver by name**
-2. **registering the device using the same name as the driver**
+To inspect the system for available I2C buses and devices, use the [`i2cdetect`](https://linux.die.net/man/8/i2cdetect) tool:
 
-Notice these things about platform drivers
-1. register and interrupt addresses are hardcoded in the device tree, which represents the SoC
-2. there is no way to remove the device hardware (since it is part of the SoC)
-3. the correct driver is selected by the `compatible` device tree property which matches platform_driver.name in the driver
-    platform_driver_register is the main register interface
-
-e.g. an example from the device tree source (dts) of a compatible device
+```bash
+i2cdetect -l       # list I2C buses
+i2cdetect -y <bus> # scan for devices on a specific bus
 ```
-		lkmc_platform_device@101e9000 {
-			compatible = "lkmc_platform_device";
-			reg = <0x101e9000 0x1000>;
-			interrupts = <18>;
-			interrupt-controller;
-			#interrupt-cells = <2>;
-			clocks = <&pclk>;
-			clock-names = "apb_pclk";
-			lkmc-asdf = <0x12345678>;
+
+---
+
+## What Is a Misc Driver?
+
+A **misc driver** is a simple type of character driver used to expose hardware functionality to **user space**. These drivers are often used alongside platform or I2C drivers to provide userspace interfaces via `/dev`.
+
+
+### Key Properties:
+
+* Registered using `misc_register()`
+* Allocated a **single minor number** from the misc major (no need to manually allocate major numbers)
+* Typically exposes `read`, `write`, `ioctl`, and `poll` file operations
+* Lives under:
+
+  * `drivers/char/misc.c` — registration API
+  * `drivers/misc/` — actual drivers that don’t fit other categories
+
+### Use Case:
+
+A misc driver can be registered inside a platform driver's `probe()` function to expose the device to user space.
+
+> ⚠️ Note: Don't confuse `misc_register` (API) with the `drivers/misc/` directory — they are related but not the same.
+
+---
+
+## What Is a Platform Device?
+
+**Platform devices** represent hardware that **cannot self-describe or announce their presence** to the operating system. Examples include on-chip peripherals (UART, I2C, GPIO), especially common in embedded systems and SoCs.
+
+Generally, they are a foundation for running software and a crucial part of a system's architecture, providing the basic functionality needed for other software and hardware to operate. Platform devices are typically integrated into a system-on-chip (SoC) and can be directly addressed by the CPU. 
+
+### Key Properties:
+
+* Not dynamically discovered — must be known at **compile-time**
+* Registered via:
+
+  * **Device Tree** (preferred for ARM/embedded): `.dts` files
+  * **Static code registration**: `platform_device_register()`
+* Bound to a driver using **name matching** (`compatible` in DT or `.name` in code)
+
+### Platform Driver Requirements:
+
+1. A device must be registered using `platform_device_register()` or Device Tree
+2. A driver must be registered using `platform_driver_register()`
+3. The names must match via `compatible` strings or driver `.name`
+
+### Device Tree Example:
+
+```dts
+lkmc_platform_device@101e9000 {
+    compatible = "lkmc_platform_device";
+    reg = <0x101e9000 0x1000>;
+    interrupts = <18>;
+    interrupt-controller;
+    #interrupt-cells = <2>;
+    clocks = <&pclk>;
+    clock-names = "apb_pclk";
+    lkmc-asdf = <0x12345678>;
 };
 ```
 
-## What is a non-platform device (USB, PCI)?
+### Notes:
 
-Non-platform devices such as PCI are inherently *discoverable*. This means that software can **find** new devices added to the system during runtime.
+* Device memory regions, IRQs, and clocks are hardcoded via Device Tree
+* These devices **cannot be hotplugged**
+* The correct driver is matched via the `compatible` string in the Device Tree and the driver's `.of_match_table`
 
-Notice these things about non-platform drivers
-1. register and interrupt addresses are dynamically allocated by the PCI system, no device tree is used
-2. the correct driver is selected by the PCI vendor:device ID. Each device must have the ID included in the software. Vendors must ensure uniqueness through a registration process. (Microsoft uses these ids for Plug and Play Technologies.)
-3. we can insert and remove the PCI device with `device_add` and `device_del` as we can in real life. Probing is not automatic, but can be done after boot with echo 1 > /sys/bus/pci/rescan.
+---
+
+## What Is a Non-Platform Device?
+
+Devices like **PCI**, **USB**, and **virtio** are **discoverable** — meaning the OS can detect them at runtime without prior knowledge.
+
+### Key Properties:
+
+* Auto-discovered by hardware buses (PCI, USB)
+* Register and interrupt addresses are **dynamically assigned**
+* Devices are matched to drivers using:
+
+  * **PCI Vendor\:Device ID**
+  * **USB Vendor/Product ID**
+* Device hotplug is supported (can be added or removed at runtime)
+
+### PCI Matching Flow:
+
+* PCI core enumerates the device and matches the IDs with a driver table (`pci_device_id`)
+* Driver is probed automatically when a match is found
+* Devices can be dynamically rescanned with:
+
+```bash
+echo 1 > /sys/bus/pci/rescan
+```
+
+### 🛠️ Example Matching Entry (C++/C):
+
+```c
+static const struct pci_device_id my_pci_ids[] = {
+    { PCI_DEVICE(0x1234, 0x5678) }, // Vendor ID, Device ID
+    { 0, }
+};
+MODULE_DEVICE_TABLE(pci, my_pci_ids);
+```
+
+## Summary: Platform vs Non-Platform
+
+| Feature            | Platform Device         | Non-Platform Device (PCI/USB) |
+| ------------------ | ----------------------- | ----------------------------- |
+| Discovery          | Static (manual)         | Automatic (hotplug capable)   |
+| Typical Use Case   | SoC peripherals         | Add-in cards, USB peripherals |
+| Address Assignment | Hardcoded (Device Tree) | Dynamic (PCI/USB assigns)     |
+| Driver Matching    | Name / compatible       | Vendor\:Device ID             |
+| Hotplug Support    | ❌ Not possible          | ✅ Yes                         |
