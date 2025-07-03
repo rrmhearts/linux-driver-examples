@@ -4,14 +4,15 @@ This document provides a consolidated introduction to **Linux device drivers**, 
 
 ## Contents & Examples
 
-This repository contains example drivers and related documentation:
+Keep scrolling for summary information for each topic. This repository contains example drivers and related documentation:
 
 1. [Character Drivers](./char/)
 2. [Misc Drivers](./misc/)
 3. [Platform Drivers](./platform/)
 4. [I2C Drivers](./i2c/)
 5. [WSL Notes](./wsl/README.md)
-6. [What is a `kobject`?](./sysfs/kobject/)
+6. [What is a kobject?](./sysfs/kobject/)
+7. [Coffee](#coffee-is-a-proven-love-language)
 
 ## I2C Devices and `i2cdetect`
 
@@ -132,3 +133,9 @@ MODULE_DEVICE_TABLE(pci, my_pci_ids);
 | Address Assignment | Hardcoded (Device Tree) | Dynamic (PCI/USB assigns)     |
 | Driver Matching    | Name / compatible       | Vendor\:Device ID             |
 | Hotplug Support    | ❌ Not possible          | ✅ Yes                         |
+
+## Coffee is a proven love language
+
+If this has proven helpful to you:
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.paypal.com/paypalme/rrmhearts)
