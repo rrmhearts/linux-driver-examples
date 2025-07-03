@@ -24,8 +24,6 @@ i2cdetect -l       # list I2C buses
 i2cdetect -y <bus> # scan for devices on a specific bus
 ```
 
----
-
 ## What Is a Misc Driver?
 
 A **misc driver** is a simple type of character driver used to expose hardware functionality to **user space**. These drivers are often used alongside platform or I2C drivers to provide userspace interfaces via `/dev`.
@@ -47,7 +45,6 @@ A misc driver can be registered inside a platform driver's `probe()` function to
 
 > ⚠️ Note: Don't confuse `misc_register` (API) with the `drivers/misc/` directory — they are related but not the same.
 
----
 
 ## What Is a Platform Device?
 
@@ -91,7 +88,6 @@ lkmc_platform_device@101e9000 {
 * These devices **cannot be hotplugged**
 * The correct driver is matched via the `compatible` string in the Device Tree and the driver's `.of_match_table`
 
----
 
 ## What Is a Non-Platform Device?
 
@@ -117,7 +113,7 @@ Devices like **PCI**, **USB**, and **virtio** are **discoverable** — meaning t
 echo 1 > /sys/bus/pci/rescan
 ```
 
-### 🛠️ Example Matching Entry (C++/C):
+### Example Matching Entry (C++/C):
 
 ```c
 static const struct pci_device_id my_pci_ids[] = {

@@ -16,9 +16,6 @@ This layered architecture makes it possible to write modular, portable drivers f
 
 In the sections below, you'll explore each of these concepts—buses, devices, drivers, and communication APIs—in detail. You'll also see how the I²C subsystem relates to platform drivers and how to instantiate devices both statically and dynamically within the kernel.
 
----
-
-Here is your original document with **small but meaningful improvements** to clarity, grammar, and consistency. The technical structure is retained, and ambiguous phrasing has been made more precise:
 
 The I²C subsystem allows Linux to act as the master and all connected devices as slaves. These devices communicate over the shared I²C bus.
 
@@ -91,7 +88,6 @@ The kernel reads this information during boot.
 The `i2c_client` is created when the associated `i2c_adapter` is registered.
 It’s also possible to manually add I²C clients that are not known at boot time.
 
----
 
 ## I²C Driver
 
@@ -114,7 +110,6 @@ static struct i2c_driver adc_driver = {
 Reference diagram of the I²C subsystem:
 > ![I²C subsystem](./etc/linux_i2c_subsystem.jpg)
 
----
 
 ## I²C Device Registration
 
@@ -141,7 +136,6 @@ i2c_add_driver(struct i2c_driver *drv);
 
 This matches the driver’s name to all `i2c_client` entries. On a match, the driver’s `probe` function is called.
 
----
 
 ## Communicating on the I²C Bus
 
@@ -159,7 +153,6 @@ i2c_smbus_write_byte_data(struct i2c_client *client, u8 command, u8 data);
 i2c_smbus_write_word_data(struct i2c_client *client, u8 command, u16 data);
 ```
 
----
 
 ## Instantiating I²C Devices
 
@@ -230,7 +223,6 @@ int sfe4001_init(struct efx_nic *efx)
 echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-3/new_device
 ```
 
----
 
 ## Userspace Development
 

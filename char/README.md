@@ -81,7 +81,6 @@ static int __init my_init(void)
 
 Great question — and the answer is **not exactly, but sometimes**. Here's a more precise breakdown:
 
----
 
 ## Are I²C Drivers Character Drivers?
 
@@ -108,7 +107,6 @@ Great question — and the answer is **not exactly, but sometimes**. Here's a mo
 | I²C Device Driver  | ❌ (by default)     | ✅                          | Kernel space                 |
 | i2c-dev (char drv) | ✅ (`/dev/i2c-X`)   | ✅                          | User space                   |
 
----
 
 ### When Would You Write a Character Driver for I²C?
 
