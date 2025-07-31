@@ -4,31 +4,19 @@ This document provides a consolidated introduction to **Linux device drivers**, 
 
 ## Contents & Examples
 
-Keep scrolling for summary information for each topic. This repository contains example drivers and related documentation:
+Keep scrolling for a short summary on large topics; click these content links for a lot more information. This repository contains example drivers and related documentation in subdirectories:
 
 1. [Character Drivers](./char/)
 2. [Misc Drivers](./misc/)
-3. [Platform Drivers](./platform/)
-4. [I2C Drivers](./i2c/)
+3. [I2C Drivers](./i2c/)
+4. [Platform Drivers](./platform/)
 5. [WSL Notes](./wsl/README.md)
 6. [What is a kobject?](./sysfs/kobject/)
 7. [Coffee](#coffee-is-a-proven-love-language)
 
-## I2C Devices and `i2cdetect`
-
-I2C devices communicate over a **two-wire bus** (SDA + SCL) and are typically **not discoverable** in the same way USB or PCI devices are. In Linux, I2C devices are treated as **platform devices** — meaning the system must already know they exist (via device tree or static registration).
-
-To inspect the system for available I2C buses and devices, use the [`i2cdetect`](https://linux.die.net/man/8/i2cdetect) tool:
-
-```bash
-i2cdetect -l       # list I2C buses
-i2cdetect -y <bus> # scan for devices on a specific bus
-```
-
 ## What Is a Misc Driver?
 
 A **misc driver** is a simple type of character driver used to expose hardware functionality to **user space**. These drivers are often used alongside platform or I2C drivers to provide userspace interfaces via `/dev`.
-
 
 ### Key Properties:
 
@@ -46,6 +34,16 @@ A misc driver can be registered inside a platform driver's `probe()` function to
 
 > ⚠️ Note: Don't confuse `misc_register` (API) with the `drivers/misc/` directory — they are related but not the same.
 
+## I2C Devices and `i2cdetect`
+
+I2C devices communicate over a **two-wire bus** (SDA + SCL) and are typically **not discoverable** in the same way USB or PCI devices are. In Linux, I2C devices are treated as **platform devices** — meaning the system must already know they exist (via device tree or static registration).
+
+To inspect the system for available I2C buses and devices, use the [`i2cdetect`](https://linux.die.net/man/8/i2cdetect) tool:
+
+```bash
+i2cdetect -l       # list I2C buses
+i2cdetect -y <bus> # scan for devices on a specific bus
+```
 
 ## What Is a Platform Device?
 
