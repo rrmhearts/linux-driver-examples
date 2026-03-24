@@ -12,7 +12,10 @@ Keep scrolling for a short summary on large topics; click these content links fo
 4. [Platform Drivers](./platform/)
 5. [WSL Notes](./wsl/README.md)
 6. [What is a kobject?](./sysfs/kobject/)
-7. [Coffee](#coffee-is-a-proven-love-language)
+
+If this documentation has proven helpful to you,
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.paypal.com/paypalme/rrmhearts)
 
 ## What Is a Misc Driver?
 
@@ -132,8 +135,4 @@ MODULE_DEVICE_TABLE(pci, my_pci_ids);
 | Driver Matching    | Name / compatible       | Vendor\:Device ID             |
 | Hotplug Support    | ❌ Not possible          | ✅ Yes                         |
 
-## Coffee is a proven love language
 
-If this has proven helpful to you:
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.paypal.com/paypalme/rrmhearts)
