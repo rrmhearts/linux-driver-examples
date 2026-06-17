@@ -34,7 +34,7 @@ Unlike C, which only requires `gcc`/`clang` and `make`, Rust kernel modules requ
 
 ## Example: A Rust `misc` Device Driver
 
-The the example, please view the [rust_misc_dev.rs](./rust_misc_dev.rs) implementation. Notice how the `module!` macro replaces the standard C boilerplate, and the `#[vtable]` macro safely maps Rust functions to the C `file_operations` struct.
+For the example, please view the [rust_misc_dev.rs](./rust_misc_dev.rs) implementation. Notice how the `module!` macro replaces the standard C boilerplate, and the `#[vtable]` macro safely maps Rust functions to the C `file_operations` struct.
 
 ### Key Takeaways from the Example:
 

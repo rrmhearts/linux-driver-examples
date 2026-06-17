@@ -6,12 +6,13 @@ This document provides a consolidated introduction to **Linux device drivers**, 
 
 Keep scrolling for a short summary on large topics; click these content links for a lot more information. This repository contains example drivers and related documentation in subdirectories:
 
-1. [Character Drivers](./char/)
-2. [Misc Drivers](./misc/)
-3. [I2C Drivers](./i2c/)
-4. [Platform Drivers](./platform/)
+1. [Character Drivers](./char/README.md
+2. [Misc Drivers](./misc/README.md)
+3. [I2C Drivers](./i2c/README.md)
+4. [Platform Drivers](./platform/README.md)
 5. [WSL Notes](./wsl/README.md)
-6. [What is a kobject?](./sysfs/kobject/)
+6. [What is a kobject?](./sysfs/kobject/README.md)
+7. [What about Rust?](./rust/README.md)
 
 If this documentation has proven helpful to you,
 
