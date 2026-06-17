@@ -2,6 +2,9 @@
 
 This document provides a consolidated introduction to **Linux device drivers**, serving as a centralized knowledge base. Since Linux driver documentation is often fragmented across various sources, this guide aims to provide a clear, cohesive overview — with a particular focus on **platform**, **I2C**, **misc**, and **character** drivers.
 
+Checkout our historic linear growth! I am so grateful for every one of these stars and hope this repository proves helpful. Please feel free to contribute as we achieve new records in Linux device driver helpfulness.
+[![Star History Chart](https://api.star-history.com/svg?repos=rrmhearts/linux-driver-examples&type=Date)](https://github.com/rrmhearts/linux-driver-examples)
+
 ## Contents & Examples
 
 Keep scrolling for a short summary on large topics; click these content links for a lot more information. This repository contains example drivers and related documentation in subdirectories:
